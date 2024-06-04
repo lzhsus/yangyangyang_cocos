@@ -38,6 +38,12 @@ export class MainAction extends SceneBase {
         let layer_root = this.node.getChildByName("layer_root").getComponent(LayerRootAction)
         layer_root.start_game()
     }
+    // 下一关
+    next_game(){
+        GameState.cur_lvl+=1;
+
+        this.start_game()
+    }
 }
 
 

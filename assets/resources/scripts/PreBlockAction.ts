@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Rect, Sprite, SpriteFrame, tween, UITransform, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab, Rect, Sprite, SpriteFrame, tween, UITransform, Vec2, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('PreBlockAction')
@@ -9,6 +9,10 @@ export class PreBlockAction extends Component {
     private types_array:SpriteFrame[] = [];
 
     private temp_pos:Vec3 = null;
+
+    private time_for_add_layer3:number = 0;
+
+    original:PreBlockAction = null;
 
     start() {
 
@@ -68,6 +72,55 @@ export class PreBlockAction extends Component {
      */
     public set_sprite_index(value:number) {
         this.sprite_index = value;
+    }
+
+    can_touch():boolean{
+        return !this.node.getChildByName("y_shadow").active;
+    }
+
+    play_start_tween(){
+        tween(this.node)
+        .to(0.1,{ scale:new Vec3(1.2,1.2,1) })
+        .start();
+    }
+
+    play_end_tween(){
+        tween(this.node)
+        .to(0.1,{ scale:new Vec3(1,1,1) })
+        .start();
+    }
+
+
+    clone_block(parent:Node,per_block:Prefab):PreBlockAction{
+        let new_block = instantiate(per_block);
+        let action = new_block.getComponent(PreBlockAction);
+        new_block.setParent(parent);
+        let pos_world = this.node.getWorldPosition();
+        let parent_local_pos = parent.getComponent(UITransform).convertToNodeSpaceAR(pos_world);
+        new_block.setPosition(parent_local_pos)
+        action.show()
+        action.init(this.sprite_index,this.types_array);
+        action.refrush_sprite(false)
+        action.original = this;
+        this.node.active = false;
+
+        return action;
+    }
+
+    set_temp_pos(v:Vec3){
+        this.temp_pos = v;
+    }
+
+    get_temp_pos():Vec3{
+        return this.temp_pos;
+    }
+
+    set_add_layer3_time(){
+        this.time_for_add_layer3 = new Date().getTime()
+    }
+
+    get_add_layer3_tiem(){
+        return this.time_for_add_layer3;
     }
 }
 

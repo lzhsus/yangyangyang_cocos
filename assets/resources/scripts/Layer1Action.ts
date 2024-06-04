@@ -1,6 +1,7 @@
-import { _decorator, Component, instantiate, Node, Prefab, SpriteFrame, UITransform, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, EventTouch, Input, instantiate, Node, Prefab, SpriteFrame, UITransform, Vec2, Vec3 } from 'cc';
 import { PreBlockAction } from './PreBlockAction';
 import { GameState } from './GameState';
+import { LayerRootAction } from './LayerRootAction';
 const { ccclass, property } = _decorator;
 
 @ccclass('Layer1Action')
@@ -12,9 +13,18 @@ export class Layer1Action extends Component {
     @property({ type:SpriteFrame })
     types_array:SpriteFrame[] = []
 
-    start() {
+    cur_block_action:PreBlockAction = null;
 
+    start() {
+        if( GameState.game_model==1 ){
+            return;
+        }
+        this.node.on(Input.EventType.TOUCH_START,this.touch_start,this)
+        this.node.on(Input.EventType.TOUCH_END,this.touch_end,this)
+        this.node.on(Input.EventType.TOUCH_CANCEL,this.touch_cancel,this)
     }
+
+
 
     update(deltaTime: number) {
         
@@ -46,10 +56,16 @@ export class Layer1Action extends Component {
     refrush_shadow(){
         for( let i=0;i<this.node.children.length;i++ ){
             let ele_1 = this.node.children[i].getComponent(PreBlockAction);
+            if( !ele_1.node.active ){
+                continue;
+            }
             ele_1.show();
 
             for( let j=i+1;j<this.node.children.length;j++ ){
                 let ele_2 = this.node.children[j].getComponent(PreBlockAction);
+                if( !ele_2.node.active ){
+                    continue;
+                }
                 if( ele_1.get_coustom_bounding_box().intersects(ele_2.get_coustom_bounding_box()) ){
                     ele_1.hide()
                     break;
@@ -104,6 +120,9 @@ export class Layer1Action extends Component {
         let temp:PreBlockAction[] = [];
         for(let ele of this.node.children){
             let action = ele.getComponent(PreBlockAction);
+            if( !action.node.active ){
+                continue;
+            }
             temp.push(action)
         }
         for (const element of temp) {
@@ -115,6 +134,60 @@ export class Layer1Action extends Component {
             othen.refrush_sprite(true);
             element.refrush_sprite(true);
         }
+    }
+
+    get_touch_block(pos_world:Vec2):PreBlockAction{
+        // 将世界坐标点 转为 局部坐标点
+        let local = this.node.getComponent(UITransform).convertToNodeSpaceAR(new Vec3(pos_world.x,pos_world.y))
+        for( let  i = this.node.children.length-1;i>=0;i-- ){
+            let ele  = this.node.children[i];
+            if( !ele.active ){
+                continue;
+            }
+            let block_action = ele.getComponent(PreBlockAction)
+            if( !block_action.can_touch() ){
+                continue;
+            }
+            if( block_action.get_bounding_box().contains(new Vec2(local.x,local.y)) ){
+                return block_action;
+            }
+        }
+        return null;
+    }
+    
+    touch_start(e:EventTouch){
+        let pos = e.getUILocation();
+        let block_action = this.get_touch_block(pos);
+        this.cur_block_action = block_action;
+        if( this.cur_block_action ){
+            this.cur_block_action.play_start_tween()
+        }
+    }
+    
+    touch_end(e:EventTouch){
+        let pos = e.getUILocation()
+        if( this.cur_block_action ){
+            this.cur_block_action.play_end_tween()
+        }else{
+            return
+        }
+        let block_action = this.get_touch_block(pos);
+        // 离开的位置在自己身上
+        if( this.cur_block_action!=block_action ){
+            return
+        }
+        this.node.parent.getComponent(LayerRootAction).play_sound(0)
+        this.node.parent.getComponent(LayerRootAction).to_3_from_1(this.cur_block_action,this.per_block)
+    }
+
+    touch_cancel(e:EventTouch){
+        if( this.cur_block_action ){
+            this.cur_block_action.play_end_tween()
+        }
+    }
+
+    get_block_size():number{
+        return this.node.children.length;
     }
 }
 
