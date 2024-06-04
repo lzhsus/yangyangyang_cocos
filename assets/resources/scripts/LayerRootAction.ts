@@ -5,6 +5,7 @@ import { Layer3Action } from './Layer3Action';
 import { GameState } from './GameState';
 import { PreBlockAction } from './PreBlockAction';
 import { MainAction } from './MainAction';
+import { EventDispatcher } from './EventDispatcher';
 const { ccclass, property } = _decorator;
 
 @ccclass('LayerRootAction')
@@ -26,6 +27,7 @@ export class LayerRootAction extends Component {
     
     start() {
         this.aduio_source = this.node.getComponent(AudioSource);
+        EventDispatcher.get_target().on(EventDispatcher.REMOVE_ACTION,this.remove,this)
     }
 
     update(deltaTime: number) {
@@ -33,6 +35,10 @@ export class LayerRootAction extends Component {
     }
 
     start_game(){
+        this.layer_1_action.clear_all()
+        this.layer_2_action.clear_all()
+        this.layer_3_action.clear_all()
+
         this.layer_1_action.start_game(GameState.cur_lvl);
     }
     // 回退一步
@@ -41,6 +47,16 @@ export class LayerRootAction extends Component {
         if( !reset_order ){
             return;
         }
+
+        {
+            if( GameState.ad_redo_times<=0 ){
+                EventDispatcher.get_target().emit(EventDispatcher.TIPS_MSG,"redo times is 0")
+            }else{
+                GameState.ad_redo_times -=1;
+                EventDispatcher.get_target().emit(EventDispatcher.REFRESH_BUTTONS)
+            }
+        }
+
         reset_order.node.setParent(this.node);
         reset_order.node.setPosition(this.node.getComponent(UITransform).convertToNodeSpaceAR(reset_order.get_temp_pos()))
 
@@ -63,11 +79,30 @@ export class LayerRootAction extends Component {
         if( this.layer_3_action.get_block_size()==0 ){
             return;
         }
+
+        {
+            if( GameState.ad_remove_times<=0 ){
+                EventDispatcher.get_target().emit(EventDispatcher.TIPS_MSG,"remove times is 0")
+            }else{
+                GameState.ad_remove_times -=1;
+                EventDispatcher.get_target().emit(EventDispatcher.REFRESH_BUTTONS)
+            }
+        }
+
         this.remove()
     }
 
     // 重新打乱
     clcik_random(){
+        {
+            if( GameState.ad_random_times<=0 ){
+                EventDispatcher.get_target().emit(EventDispatcher.TIPS_MSG,"remove times is 0")
+            }else{
+                GameState.ad_random_times -=1;
+                EventDispatcher.get_target().emit(EventDispatcher.REFRESH_BUTTONS)
+            }
+        }
+
         this.layer_1_action.random_blocks();
     }
 
@@ -111,6 +146,7 @@ export class LayerRootAction extends Component {
                     this.node.getParent().getComponent(MainAction).next_game()
                 }
             }
+            this.check_over()
         }).start()
     }
 
@@ -134,7 +170,18 @@ export class LayerRootAction extends Component {
                     this.node.getParent().getComponent(MainAction).next_game()
                 }
             }
+            this.check_over()
         }).start()
+    }
+
+    check_over(){
+        if( this.get_layer3_size()>=7 ){
+            EventDispatcher.get_target().emit(EventDispatcher.OPEN_REVIVE)
+        }
+    }
+
+    get_layer3_size():number{
+        return this.layer_3_action.get_block_size()
     }
 
     play_sound(index:number):void{

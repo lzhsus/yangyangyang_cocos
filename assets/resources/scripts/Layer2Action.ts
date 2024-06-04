@@ -22,6 +22,10 @@ export class Layer2Action extends Component {
     update(deltaTime: number) {
         
     }
+    
+    clear_all(){
+        this.node.removeAllChildren()
+    }
 
     get_block_size():number{
         return this.node.children.length;

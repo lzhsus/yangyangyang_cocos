@@ -21,6 +21,7 @@ export class Layer3Action extends Component {
         
     }
 
+
     reset_order(){
         for( let i=0;i<this.order_list.length;i++ ){
             let ele = this.order_list[i];
@@ -152,6 +153,13 @@ export class Layer3Action extends Component {
             }
         }
         return ret;
+    }
+
+    clear_all(){
+        for( let ele of this.order_list ){
+            ele.node.removeFromParent()
+        }
+        this.order_list.splice(0,this.order_list.length)
     }
 }
 
