@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, director, Node, Sprite } from 'cc';
+import { _decorator, Button, Component, director, Node, Sprite, tween, Vec3 } from 'cc';
 import { SceneBase } from './SceneBase';
 import { GameState } from './GameState';
 import { EditAction } from './EditAction';
@@ -20,6 +20,9 @@ export class MainAction extends SceneBase {
 
     @property({ type:Button })
     btn_random:Button = null;
+
+    @property({ type:Node })
+    sheeps_node:Node = null;
 
     start() {
         this.init_bg_sound();
@@ -53,11 +56,30 @@ export class MainAction extends SceneBase {
         this.start_game()
     }
 
-    start_game(){
-        GameState.reset_ad_times();
+    private sheeps_tween(callback:Function){
+        this.sheeps_node.active = true;
+        this.sheeps_node.setPosition(350,0)
+        this.sheeps_node.setScale(2,2);
 
-        let layer_root = this.node.getChildByName("layer_root").getComponent(LayerRootAction)
-        layer_root.start_game()
+        tween(this.sheeps_node)
+        .to(0.8,{ position:new Vec3(-350,0) })
+        .call(()=>{
+            callback()
+        })
+        .to(0.6,{ position:new Vec3(-1000,0) })
+        .call(()=>{
+            this.sheeps_node.active = false;
+        })
+        .start()
+    }
+
+    start_game(){
+        this.sheeps_tween(()=>{
+            GameState.reset_ad_times();
+    
+            let layer_root = this.node.getChildByName("layer_root").getComponent(LayerRootAction)
+            layer_root.start_game()
+        })
     }
     // 下一关
     next_game(){

@@ -165,6 +165,10 @@ export class Layer1Action extends Component {
     }
     
     touch_end(e:EventTouch){
+        if( this.node.getComponent(LayerRootAction).get_layer3_size()>=7 ){
+            return
+        }
+
         let pos = e.getUILocation()
         if( this.cur_block_action ){
             this.cur_block_action.play_end_tween()

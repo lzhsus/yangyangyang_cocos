@@ -43,19 +43,17 @@ export class LayerRootAction extends Component {
     }
     // 回退一步
     click_redo(){
+        if( GameState.ad_redo_times<=0 ){
+            EventDispatcher.get_target().emit(EventDispatcher.TIPS_MSG,"redo times is 0")
+            return
+        }
         let reset_order = this.layer_3_action.get_redo_block();
         if( !reset_order ){
             return;
         }
-
-        {
-            if( GameState.ad_redo_times<=0 ){
-                EventDispatcher.get_target().emit(EventDispatcher.TIPS_MSG,"redo times is 0")
-            }else{
-                GameState.ad_redo_times -=1;
-                EventDispatcher.get_target().emit(EventDispatcher.REFRESH_BUTTONS)
-            }
-        }
+        // 更新次数
+        GameState.ad_redo_times -=1;
+        EventDispatcher.get_target().emit(EventDispatcher.REFRESH_BUTTONS)
 
         reset_order.node.setParent(this.node);
         reset_order.node.setPosition(this.node.getComponent(UITransform).convertToNodeSpaceAR(reset_order.get_temp_pos()))
@@ -83,6 +81,7 @@ export class LayerRootAction extends Component {
         {
             if( GameState.ad_remove_times<=0 ){
                 EventDispatcher.get_target().emit(EventDispatcher.TIPS_MSG,"remove times is 0")
+                return
             }else{
                 GameState.ad_remove_times -=1;
                 EventDispatcher.get_target().emit(EventDispatcher.REFRESH_BUTTONS)
@@ -97,6 +96,7 @@ export class LayerRootAction extends Component {
         {
             if( GameState.ad_random_times<=0 ){
                 EventDispatcher.get_target().emit(EventDispatcher.TIPS_MSG,"remove times is 0")
+                return
             }else{
                 GameState.ad_random_times -=1;
                 EventDispatcher.get_target().emit(EventDispatcher.REFRESH_BUTTONS)
