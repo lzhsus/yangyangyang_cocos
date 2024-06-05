@@ -155,35 +155,55 @@ export class Layer1Action extends Component {
         return null;
     }
     
+    /**
+     * touch start 方法
+     * @param e 
+     */
     touch_start(e:EventTouch){
         let pos = e.getUILocation();
+        // 根据坐标获取 触控到的block
         let block_action = this.get_touch_block(pos);
         this.cur_block_action = block_action;
         if( this.cur_block_action ){
+            // 播放该block放大的动画
             this.cur_block_action.play_start_tween()
         }
     }
     
+    /**
+     * touch end 方法
+     * @param e 
+     * @returns 
+     */
     touch_end(e:EventTouch){
-        if( this.node.getComponent(LayerRootAction).get_layer3_size()>=7 ){
+        // 如果 layer3中的block数量7个 逻辑需要终止
+        if( this.node.getParent().getComponent(LayerRootAction).get_layer3_size()>=7 ){
             return
         }
 
         let pos = e.getUILocation()
         if( this.cur_block_action ){
+            // 播放缩小的动画
             this.cur_block_action.play_end_tween()
         }else{
             return
         }
+        // 根据坐标获取 触控到的block
         let block_action = this.get_touch_block(pos);
         // 离开的位置在自己身上
         if( this.cur_block_action!=block_action ){
             return
         }
+        // 播放click音效
         this.node.parent.getComponent(LayerRootAction).play_sound(0)
+        // 把block放入的熬 layer root中
         this.node.parent.getComponent(LayerRootAction).to_3_from_1(this.cur_block_action,this.per_block)
     }
 
+    /**
+     * 取消触控
+     * @param e 
+     */
     touch_cancel(e:EventTouch){
         if( this.cur_block_action ){
             this.cur_block_action.play_end_tween()

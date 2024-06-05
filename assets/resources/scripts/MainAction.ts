@@ -81,17 +81,30 @@ export class MainAction extends SceneBase {
             layer_root.start_game()
         })
     }
-    // 下一关
+    
+    /**
+     * 下一关
+     */
     next_game(){
+        // 当前关卡 +1
         GameState.cur_lvl+=1;
-
+        if( GameState.cur_lvl>GameState.get_max_lvl() ){
+            GameState.cur_lvl = 1;
+        }
+        // 开始游戏
         this.start_game()
     }
 
+    /**
+     * 刷新按钮样式 模式样式或是灰度渲染
+     */
     refresh_buttons(){
+        // 判断道具次数
         if( GameState.ad_redo_times<=0 ){
+            // 如果道具次数<=0 进行灰度渲染 按钮为灰色
             this.btn_redo.getComponent(Sprite).grayscale = true;
         }else{
+            // 正常的渲染
             this.btn_redo.getComponent(Sprite).grayscale = false;
         }
         if( GameState.ad_remove_times<=0 ){

@@ -11,7 +11,6 @@ const { ccclass, property } = _decorator;
 @ccclass('LayerRootAction')
 export class LayerRootAction extends Component {
 
-    @property({ type:Layer1Action }) 
     layer_1_action:Layer1Action = null;
 
     @property({ type:Layer2Action }) 
@@ -26,6 +25,8 @@ export class LayerRootAction extends Component {
     audio_clip_array:AudioClip[] = [];
     
     start() {
+        this.load_layer_1_action();
+
         this.aduio_source = this.node.getComponent(AudioSource);
         EventDispatcher.get_target().on(EventDispatcher.REMOVE_ACTION,this.remove,this)
     }
@@ -33,8 +34,21 @@ export class LayerRootAction extends Component {
     update(deltaTime: number) {
         
     }
+    /**
+     * 加载 Layer1Action
+     */
+    private load_layer_1_action(){
+        if( !this.layer_1_action ){
+            this.layer_1_action = this.node.getChildByName("layer1").getComponent(Layer1Action)
+        }
+    }
 
+    /**
+     * 开始游戏
+     */
     start_game(){
+        this.load_layer_1_action();
+
         this.layer_1_action.clear_all()
         this.layer_2_action.clear_all()
         this.layer_3_action.clear_all()
@@ -91,7 +105,10 @@ export class LayerRootAction extends Component {
         this.remove()
     }
 
-    // 重新打乱
+    /**
+     * 点击随机
+     * @returns 
+     */
     clcik_random(){
         {
             if( GameState.ad_random_times<=0 ){
