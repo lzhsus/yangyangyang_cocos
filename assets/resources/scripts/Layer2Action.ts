@@ -65,6 +65,7 @@ export class Layer2Action extends Component {
      * @param e 
      */
     touch_start(e:EventTouch){
+        console.log(111)
         let pos = e.getUILocation();
         // 根据坐标获取 触控到的block
         let block_action = this.get_touch_block(pos);
@@ -81,6 +82,7 @@ export class Layer2Action extends Component {
      * @returns 
      */
     touch_end(e:EventTouch){
+        console.log(2222)
         // 获取坐标
         let pos = e.getUILocation()
         if( this.cur_block_action ){
@@ -98,12 +100,13 @@ export class Layer2Action extends Component {
         // 给block设置一个临时的坐标 （改坐标是block在当前node中的世界坐标）
         this.cur_block_action.set_temp_pos(this.cur_block_action.node.getWorldPosition())
         // 播放触控声音
-        this.node.parent.getComponent(LayerRootAction).play_sound(0)
+        this.node.getParent().getComponent(LayerRootAction).play_sound(0)
         // 把block放入到 layer root中
-        this.node.parent.getComponent(LayerRootAction).to_3_from_2(this.cur_block_action)
+        this.node.getParent().getComponent(LayerRootAction).to_3_from_2(this.cur_block_action)
     }
 
     touch_cancel(e:EventTouch){
+        console.log(444)
         if( this.cur_block_action ){
             this.cur_block_action.play_end_tween()
         }

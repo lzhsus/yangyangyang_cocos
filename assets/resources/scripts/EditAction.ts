@@ -57,7 +57,7 @@ export class EditAction extends Component {
         this.node.on(Input.EventType.TOUCH_START,this.touch_start,this)
         this.node.on(Input.EventType.TOUCH_MOVE,this.touch_move,this)
 
-        this.node.on(Input.EventType.MOUSE_MOVE,this.mouse_move,this)
+        this.node.on(Input.EventType.TOUCH_END,this.mouse_move,this)
 
     }
 

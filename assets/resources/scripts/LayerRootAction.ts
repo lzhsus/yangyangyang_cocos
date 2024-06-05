@@ -176,6 +176,7 @@ export class LayerRootAction extends Component {
 
         tween(block.node).to(0.15,{ position:local_pos }).call(()=>{
             this.layer_3_action.add(block);
+            
             let is_del = this.layer_3_action.del_sane_block();
             if( is_del ){
                 this.play_sound(1)

@@ -4595,7 +4595,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": -10,
+      "width": 400,
       "height": 0
     },
     "_anchorPoint": {
@@ -4667,7 +4667,7 @@
     "_enabled": true,
     "__prefab": null,
     "_resizeMode": 1,
-    "_layoutType": 1,
+    "_layoutType": 3,
     "_cellSize": {
       "__type__": "cc.Size",
       "width": 40,
@@ -4685,7 +4685,7 @@
     "_constraint": 0,
     "_constraintNum": 2,
     "_affectedByScale": false,
-    "_isAlign": false,
+    "_isAlign": true,
     "_id": "cb7YAXO+dNuY+Cl+3Xr9s7"
   },
   {
@@ -5807,9 +5807,6 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "layer_1_action": {
-      "__id__": 205
-    },
     "layer_2_action": {
       "__id__": 209
     },
@@ -6550,7 +6547,7 @@
         "__id__": 267
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [],
     "_prefab": null,
     "_lpos": {
@@ -10228,13 +10225,13 @@
     },
     "_string": "",
     "_horizontalAlign": 0,
-    "_verticalAlign": 1,
+    "_verticalAlign": 0,
     "_actualFontSize": 40,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
     "_overflow": 1,
-    "_enableWrapText": false,
+    "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
@@ -10366,7 +10363,7 @@
     "_fontFamily": "Arial",
     "_lineHeight": 40,
     "_overflow": 1,
-    "_enableWrapText": false,
+    "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
@@ -10489,7 +10486,7 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_inputFlag": 5,
-    "_inputMode": 2,
+    "_inputMode": 0,
     "_maxLength": 8,
     "_id": "feMR/0hB1OiKWk/ZZNttQa"
   },
@@ -10643,13 +10640,13 @@
     },
     "_string": "",
     "_horizontalAlign": 0,
-    "_verticalAlign": 1,
+    "_verticalAlign": 0,
     "_actualFontSize": 40,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
     "_overflow": 1,
-    "_enableWrapText": false,
+    "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
@@ -10781,7 +10778,7 @@
     "_fontFamily": "Arial",
     "_lineHeight": 40,
     "_overflow": 1,
-    "_enableWrapText": false,
+    "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
@@ -10904,7 +10901,7 @@
       "__expectedType__": "cc.SpriteFrame"
     },
     "_inputFlag": 5,
-    "_inputMode": 2,
+    "_inputMode": 0,
     "_maxLength": 8,
     "_id": "f4PhMAWyJKOJTSVN23j2B/"
   },

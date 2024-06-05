@@ -35,6 +35,7 @@ export class MainAction extends SceneBase {
             EventDispatcher.get_target().on(EventDispatcher.REPLAY_GAME,this.replay_game,this)
             EventDispatcher.get_target().on(EventDispatcher.REFRESH_BUTTONS,this.refresh_buttons,this)
         }else{
+            this.sheeps_node.active = false;
             this.eidt_root.active = true;
             this.eidt_root.getChildByName("edit").getComponent(EditAction).start_grid()
         }
@@ -76,6 +77,7 @@ export class MainAction extends SceneBase {
     start_game(){
         this.sheeps_tween(()=>{
             GameState.reset_ad_times();
+            this.refresh_buttons();
     
             let layer_root = this.node.getChildByName("layer_root").getComponent(LayerRootAction)
             layer_root.start_game()
@@ -112,6 +114,7 @@ export class MainAction extends SceneBase {
         }else{
             this.btn_remove.getComponent(Sprite).grayscale = false;
         }
+
         if( GameState.ad_random_times<=0 ){
             this.btn_random.getComponent(Sprite).grayscale = true;
         }else{
